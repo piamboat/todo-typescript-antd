@@ -1,5 +1,6 @@
 import React from 'react'
-import ToDoList from '@/components/ToDoList'
+import AddTaskBar from '@/components/AddTaskBar';
+
 import { PageHeader } from 'antd';
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
                 subTitle="To do list"
               />
               <div className="p-5">
-                  <ToDoList />
+                  <AddTaskBar />
               </div>
             </div>
         </div>
