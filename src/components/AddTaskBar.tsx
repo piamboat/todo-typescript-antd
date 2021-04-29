@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { Form, Input, Button } from 'antd'
 import DisplayTask from '@/components/DisplayTask'
+import { tasksState } from '@/components/AtomsState'
+
+import { Form, Input, Button } from 'antd'
+import { useRecoilState } from 'recoil'
 
 const AddTaskBar: React.FC = () => {
     const [form] = Form.useForm()
     const [task, setTask] = useState('')
-    const [tasks, setTasks] = useState<{}[]>([])
+    const [tasks, setTasks] = useRecoilState(tasksState)
 
     const onSubmitForm = () => {
         const newTask = {
@@ -14,9 +17,12 @@ const AddTaskBar: React.FC = () => {
         }
 
         setTasks([newTask, ...tasks])
-        console.log(tasks);
         form.resetFields()
-      };
+    };
+
+    const onDeleteTask = (id) => {
+        setTasks( tasks.filter(task => task.id !== id) )
+    }
 
     return (
         <React.Fragment>
@@ -42,7 +48,7 @@ const AddTaskBar: React.FC = () => {
                     Add Task
                 </Button>
             </ Form>
-            <DisplayTask />
+            <DisplayTask onDeleteTask={onDeleteTask} />
         </React.Fragment>
     )
 }
