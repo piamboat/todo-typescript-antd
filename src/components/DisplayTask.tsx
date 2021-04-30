@@ -5,8 +5,14 @@ import { useRecoilValue } from 'recoil'
 import { MdClose } from "react-icons/md"
 import { Tabs, Card, Empty, Input } from 'antd'
 
+interface Task {
+    id: number;
+    content: string;
+    time: string;
+}
+
 interface DisplayTaskProps {
-    onDeleteTask: (deletedTask: {}, type: string) => void
+    onDeleteTask: (deletedTask: Task, type: string) => void
 }
 
 const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {

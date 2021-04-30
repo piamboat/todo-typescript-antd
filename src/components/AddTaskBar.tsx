@@ -5,6 +5,12 @@ import { tasksState, completedTasksState, numOfTasks } from '@/components/AtomsS
 import { Form, Input, Button, Alert } from 'antd'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
+interface Task {
+    id: number;
+    content: string;
+    time: string;
+}
+
 const AddTaskBar: React.FC = () => {
     const [form] = Form.useForm()
     const [task, setTask] = useState('')
@@ -26,7 +32,7 @@ const AddTaskBar: React.FC = () => {
         form.resetFields()
     };
 
-    const onDeleteTask = (deletedTask: {}, type: string) => {
+    const onDeleteTask = (deletedTask: Task, type: string) => {
         if (type === 'finished') {
             setTasks( tasks.filter(task => task.id !== deletedTask.id) )
             setCompletedTasks([deletedTask, ...completedTasks])
