@@ -5,6 +5,11 @@ export const tasksState = atom({
     default: <{}[]>[]
 })
 
+export const completedTasksState = atom({
+    key: 'completedTasksState',
+    default: <{}[]>[]
+})
+
 // use when we want to calculate one or more state to get the result
 export const numOfTasks = selector({
     key: 'numOfTasks',

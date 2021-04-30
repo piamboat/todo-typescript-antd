@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import DisplayTask from '@/components/DisplayTask'
-import { tasksState, numOfTasks } from '@/components/AtomsState'
+import { tasksState, completedTasksState, numOfTasks } from '@/components/AtomsState'
 
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Alert } from 'antd'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
 const AddTaskBar: React.FC = () => {
     const [form] = Form.useForm()
     const [task, setTask] = useState('')
+    const [completedTasks, setCompletedTasks] = useRecoilState(completedTasksState)
     const [tasks, setTasks] = useRecoilState(tasksState)
     const totalTasks = useRecoilValue(numOfTasks)
 
@@ -25,8 +26,14 @@ const AddTaskBar: React.FC = () => {
         form.resetFields()
     };
 
-    const onDeleteTask = (id: number) => {
-        setTasks( tasks.filter(task => task.id !== id) )
+    const onDeleteTask = (deletedTask: {}, type: string) => {
+        if (type === 'finished') {
+            setTasks( tasks.filter(task => task.id !== deletedTask.id) )
+            setCompletedTasks([deletedTask, ...completedTasks])
+        }
+        else if (type === 'delete') {
+            setCompletedTasks( completedTasks.filter(completedTask => completedTask.id !== deletedTask.id) )
+        }
     }
 
     return (
@@ -53,7 +60,7 @@ const AddTaskBar: React.FC = () => {
                     Add Task
                 </Button>
             </ Form>
-            <div className="mb-2">Total Tasks: {totalTasks}</div>
+            <Alert message={`Total Taks: ${totalTasks}`} type="info" />
             <DisplayTask onDeleteTask={onDeleteTask} />
         </React.Fragment>
     )
