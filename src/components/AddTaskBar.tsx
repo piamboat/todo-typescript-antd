@@ -1,26 +1,31 @@
 import React, { useState } from 'react'
 import DisplayTask from '@/components/DisplayTask'
-import { tasksState } from '@/components/AtomsState'
+import { tasksState, numOfTasks } from '@/components/AtomsState'
 
 import { Form, Input, Button } from 'antd'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 const AddTaskBar: React.FC = () => {
     const [form] = Form.useForm()
     const [task, setTask] = useState('')
     const [tasks, setTasks] = useRecoilState(tasksState)
+    const totalTasks = useRecoilValue(numOfTasks)
 
     const onSubmitForm = () => {
+        const dateObj = new Date()
+        const time = `Added on ${dateObj.getHours()}:${dateObj.getMinutes()}`
+
         const newTask = {
             id: Math.floor(Math.random() * 10000) + 1,
-            content: task
+            content: task,
+            time
         }
 
         setTasks([newTask, ...tasks])
         form.resetFields()
     };
 
-    const onDeleteTask = (id) => {
+    const onDeleteTask = (id: number) => {
         setTasks( tasks.filter(task => task.id !== id) )
     }
 
@@ -48,6 +53,7 @@ const AddTaskBar: React.FC = () => {
                     Add Task
                 </Button>
             </ Form>
+            <div className="mb-2">Total Tasks: {totalTasks}</div>
             <DisplayTask onDeleteTask={onDeleteTask} />
         </React.Fragment>
     )
