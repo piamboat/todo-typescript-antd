@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { tasksState, completedTasksState } from '@/components/AtomsState'
+import Modal from '@/components/Modal'
 import { useRecoilValue } from 'recoil'
 
 import { MdClose, MdEdit } from "react-icons/md"
 import { Tabs, Card, Empty, Input } from 'antd'
+import EditCardContent from '@/components/EditCardContent'
 
 interface Task {
     id: number;
@@ -12,30 +14,42 @@ interface Task {
 }
 
 interface DisplayTaskProps {
-    onDeleteTask: (deletedTask: Task, type: string) => void
+    onDeleteTask: (deletedTask: Task, type: string) => void;
+    onEditContent: (editId: number, content: string, type:string) => void
 }
 
-const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
+const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }) => {
     const TabPane = Tabs.TabPane
     const Search = Input.Search;
     const tState = useRecoilValue(tasksState)
     const cState = useRecoilValue(completedTasksState)
     const [term, setTerm] = useState('')
+    const [modalActive, setModalActive] = useState(false);
+    const [modalContent, setModalContent] = useState<JSX.Element>();
+    
+    const onEditSubmit = (currTask: Task, type: string) => {
+        const currEdit = {
+            currTask,
+            type
+        }
 
-    const onTabPress = (key: string) => {
-        // do something when tab is pressed
+        setModalContent(
+            <EditCardContent currEdit={currEdit} onEditContent={onEditContent} />
+        )
+        setModalActive(true)
     }
 
     const onClearSearch = (term: string) => {
         setTerm('')
     }
 
-    const onEditContent = (id: number, content: string, type: string) => {
-        console.log('edit content')
-    }
-
     return (
         <React.Fragment>
+            {modalActive && (
+                <Modal onCancel={() => setModalActive(false)}>
+                    {modalContent}
+                </Modal>
+            )}
             <Search
                 className="flex"
                 placeholder="input search text"
@@ -45,7 +59,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                 size="large"
                 onSearch={term => onClearSearch(term)}
             />
-            <Tabs defaultActiveKey="1" onChange={onTabPress}>
+            <Tabs defaultActiveKey="1">
                 <TabPane tab="To-do-list" key="1">
                     { tState.length > 0 ?
                         (
@@ -55,7 +69,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                                     <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
                                         <div className='flex items-center'>
                                             {task.content}
-                                            <MdEdit onClick={() => onEditContent(task.id, task.content, 'task')} />
+                                            <MdEdit onClick={() => onEditSubmit(task, 'finished')} />
                                         </div>
                                     </Card>
                                 )
@@ -66,7 +80,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                                     <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
                                         <div className='flex items-center'>
                                             {filteredTask.content}
-                                            <MdEdit onClick={() => onEditContent(filteredTask.id, filteredTask.content, 'task')} />
+                                            <MdEdit onClick={() => onEditSubmit(filteredTask, 'finished')} />
                                         </div>
                                     </Card>
                                 )
@@ -84,7 +98,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                                     <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
                                         <div className='flex items-center'>
                                             {task.content}
-                                            <MdEdit onClick={() => onEditContent(task.id, task.content, 'done')} />
+                                            <MdEdit onClick={() => onEditSubmit(task, 'delete')} />
                                         </div>
                                     </Card>
                                 )
@@ -95,7 +109,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                                     <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
                                         <div className='flex items-center'>
                                             {filteredTask.content}
-                                            <MdEdit onClick={() => onEditContent(filteredTask.id, filteredTask.content, 'done')} />
+                                            <MdEdit onClick={() => onEditSubmit(filteredTask, 'delete')} />
                                         </div>
                                     </Card>
                                 )

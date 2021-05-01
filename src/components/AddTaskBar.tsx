@@ -32,6 +32,31 @@ const AddTaskBar: React.FC = () => {
         form.resetFields()
     };
 
+    const onEditContent = (editId: number, content: string, type:string) => {
+        if (type === 'finished') {
+            // setTasks
+            let newTasks: Task[] = JSON.parse(JSON.stringify([...tasks]))
+            newTasks.map(task => {
+            if (task.id === editId) {
+                task.content = content
+            }
+            });
+
+            setTasks(newTasks);
+        }
+        else if (type === 'delete') {
+            // set completedTasks
+            let newTasks: Task[] = JSON.parse(JSON.stringify([...completedTasks]))
+            newTasks.map(task => {
+            if (task.id === editId) {
+                task.content = content
+            }
+            });
+
+            setCompletedTasks(newTasks);
+        }
+    }
+
     const onDeleteTask = (deletedTask: Task, type: string) => {
         if (type === 'finished') {
             setTasks( tasks.filter(task => task.id !== deletedTask.id) )
@@ -67,7 +92,7 @@ const AddTaskBar: React.FC = () => {
                 </Button>
             </ Form>
             <Alert message={`Total Taks: ${totalTasks}`} type="info" />
-            <DisplayTask onDeleteTask={onDeleteTask} />
+            <DisplayTask onDeleteTask={onDeleteTask} onEditContent={onEditContent} />
         </React.Fragment>
     )
 }
