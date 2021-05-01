@@ -15,10 +15,16 @@ interface CurrEdit {
 interface EditCardContentProps {
     currEdit: CurrEdit;
     onEditContent: (editId: number, content: string, type: string) => void;
+    onModalSubmit: () => void;
 }
 
-const EditCardContent: React.FC<EditCardContentProps> = ({ currEdit, onEditContent }) => {
+const EditCardContent: React.FC<EditCardContentProps> = ({ currEdit, onEditContent, onModalSubmit }) => {
     const [cardContent, setCardContent] = useState(currEdit.currTask.content);
+
+    const onModalEditSubmit = (id: number, content: string, type: string) => {
+        onEditContent(id, content, type)
+        onModalSubmit()
+    }
 
     return (
         <div>
@@ -36,7 +42,7 @@ const EditCardContent: React.FC<EditCardContentProps> = ({ currEdit, onEditConte
                 <div>
                     <Button
                         type="primary"
-                        onClick={ () => onEditContent(currEdit.currTask.id, cardContent, currEdit.type) }
+                        onClick={ () => onModalEditSubmit(currEdit.currTask.id, cardContent, currEdit.type) }
                     >
                         Edit
                     </Button>

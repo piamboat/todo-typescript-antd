@@ -34,7 +34,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }
         }
 
         setModalContent(
-            <EditCardContent currEdit={currEdit} onEditContent={onEditContent} />
+            <EditCardContent currEdit={currEdit} onEditContent={onEditContent} onModalSubmit={() => setModalActive(false)} />
         )
         setModalActive(true)
     }
@@ -50,74 +50,78 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }
                     {modalContent}
                 </Modal>
             )}
-            <Search
-                className="flex"
-                placeholder="input search text"
-                value={term}
-                onChange={e => setTerm(e.target.value)}
-                enterButton="Clear"
-                size="large"
-                onSearch={term => onClearSearch(term)}
-            />
-            <Tabs defaultActiveKey="1">
-                <TabPane tab="To-do-list" key="1">
-                    { tState.length > 0 ?
-                        (
-                            term.length === 0 ?
-                            tState.map(task => {
-                                return (
-                                    <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
-                                        <div className='flex items-center'>
-                                            {task.content}
-                                            <MdEdit onClick={() => onEditSubmit(task, 'finished')} />
-                                        </div>
-                                    </Card>
-                                )
-                            })
-                            :
-                            tState.filter(task => task.content.includes(term)).map(filteredTask => {
-                                return (
-                                    <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
-                                        <div className='flex items-center'>
-                                            {filteredTask.content}
-                                            <MdEdit onClick={() => onEditSubmit(filteredTask, 'finished')} />
-                                        </div>
-                                    </Card>
-                                )
-                            })
+            {!modalActive && (
+                <React.Fragment>
+                    <Search
+                        className="flex"
+                        placeholder="input search text"
+                        value={term}
+                        onChange={e => setTerm(e.target.value)}
+                        enterButton="Clear"
+                        size="large"
+                        onSearch={term => onClearSearch(term)}
+                    />
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="To-do-list" key="1">
+                            { tState.length > 0 ?
+                                (
+                                    term.length === 0 ?
+                                    tState.map(task => {
+                                        return (
+                                            <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
+                                                <div className='flex items-center'>
+                                                    {task.content}
+                                                    <MdEdit onClick={() => onEditSubmit(task, 'finished')} />
+                                                </div>
+                                            </Card>
+                                        )
+                                    })
+                                    :
+                                    tState.filter(task => task.content.includes(term)).map(filteredTask => {
+                                        return (
+                                            <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
+                                                <div className='flex items-center'>
+                                                    {filteredTask.content}
+                                                    <MdEdit onClick={() => onEditSubmit(filteredTask, 'finished')} />
+                                                </div>
+                                            </Card>
+                                        )
+                                    })
 
-                        )
-                        : <Empty /> }
-                </TabPane>
-                <TabPane tab="Completed Tasks" key="2">
-                    { cState.length > 0 ?
-                        (
-                            term.length === 0 ?
-                            cState.map(task => {
-                                return (
-                                    <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
-                                        <div className='flex items-center'>
-                                            {task.content}
-                                            <MdEdit onClick={() => onEditSubmit(task, 'delete')} />
-                                        </div>
-                                    </Card>
                                 )
-                            })
-                            :
-                            cState.filter(task => task.content.includes(term)).map(filteredTask => {
-                                return (
-                                    <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
-                                        <div className='flex items-center'>
-                                            {filteredTask.content}
-                                            <MdEdit onClick={() => onEditSubmit(filteredTask, 'delete')} />
-                                        </div>
-                                    </Card>
+                                : <Empty /> }
+                        </TabPane>
+                        <TabPane tab="Completed Tasks" key="2">
+                            { cState.length > 0 ?
+                                (
+                                    term.length === 0 ?
+                                    cState.map(task => {
+                                        return (
+                                            <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
+                                                <div className='flex items-center'>
+                                                    {task.content}
+                                                    <MdEdit onClick={() => onEditSubmit(task, 'delete')} />
+                                                </div>
+                                            </Card>
+                                        )
+                                    })
+                                    :
+                                    cState.filter(task => task.content.includes(term)).map(filteredTask => {
+                                        return (
+                                            <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
+                                                <div className='flex items-center'>
+                                                    {filteredTask.content}
+                                                    <MdEdit onClick={() => onEditSubmit(filteredTask, 'delete')} />
+                                                </div>
+                                            </Card>
+                                        )
+                                    })
                                 )
-                            })
-                        )
-                        : <Empty /> }
-                </TabPane>
-            </Tabs>
+                                : <Empty /> }
+                        </TabPane>
+                    </Tabs>
+                </React.Fragment>
+            )}
         </React.Fragment>
     )
 }
