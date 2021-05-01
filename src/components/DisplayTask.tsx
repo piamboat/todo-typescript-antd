@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { tasksState, completedTasksState } from '@/components/AtomsState'
 import { useRecoilValue } from 'recoil'
 
-import { MdClose } from "react-icons/md"
+import { MdClose, MdEdit } from "react-icons/md"
 import { Tabs, Card, Empty, Input } from 'antd'
 
 interface Task {
@@ -30,6 +30,10 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
         setTerm('')
     }
 
+    const onEditContent = (id: number, content: string, type: string) => {
+        console.log('edit content')
+    }
+
     return (
         <React.Fragment>
             <Search
@@ -48,16 +52,22 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                             term.length === 0 ?
                             tState.map(task => {
                                 return (
-                                    <Card key={task.id} title={task.content} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
-                                        {task.time}
+                                    <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
+                                        <div className='flex items-center'>
+                                            {task.content}
+                                            <MdEdit onClick={() => onEditContent(task.id, task.content, 'task')} />
+                                        </div>
                                     </Card>
                                 )
                             })
                             :
                             tState.filter(task => task.content.includes(term)).map(filteredTask => {
                                 return (
-                                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
-                                        {filteredTask.time}
+                                    <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
+                                        <div className='flex items-center'>
+                                            {filteredTask.content}
+                                            <MdEdit onClick={() => onEditContent(filteredTask.id, filteredTask.content, 'task')} />
+                                        </div>
                                     </Card>
                                 )
                             })
@@ -71,16 +81,22 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
                             term.length === 0 ?
                             cState.map(task => {
                                 return (
-                                    <Card key={task.id} title={task.content} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
-                                        {task.time}
+                                    <Card key={task.id} title={task.time} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
+                                        <div className='flex items-center'>
+                                            {task.content}
+                                            <MdEdit onClick={() => onEditContent(task.id, task.content, 'done')} />
+                                        </div>
                                     </Card>
                                 )
                             })
                             :
                             cState.filter(task => task.content.includes(term)).map(filteredTask => {
                                 return (
-                                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
-                                        {filteredTask.time}
+                                    <Card key={filteredTask.id} title={filteredTask.time} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
+                                        <div className='flex items-center'>
+                                            {filteredTask.content}
+                                            <MdEdit onClick={() => onEditContent(filteredTask.id, filteredTask.content, 'done')} />
+                                        </div>
                                     </Card>
                                 )
                             })
