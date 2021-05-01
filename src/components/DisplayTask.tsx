@@ -18,72 +18,74 @@ interface DisplayTaskProps {
 const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask }) => {
     const TabPane = Tabs.TabPane
     const Search = Input.Search;
-    const tasks = useRecoilValue(tasksState)
-    const completedTasks = useRecoilValue(completedTasksState)
-    const [key, setKey] = useState('1')
-    const [activeSearch, setActiveSearch] = useState(false)
-    const [searchTasks, setSearchTasks] = useState<JSX.Element[]>([])
-    const [searchCompletedTasks, setSearchCompletedTasks] = useState<JSX.Element[]>([])
-
-    // create cards of tasks
-    const taskList = tasks.map(task => {
-        return (
-            <Card key={task.id} title={task.content} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
-                {task.time}
-            </Card>
-        )
-    })
-
-    // create cards of finished tasks
-    const finishedTasks = completedTasks.map(completedTask => {
-        return (
-            <Card key={completedTask.id} title={completedTask.content} extra={ <MdClose onClick={() => onDeleteTask(completedTask, 'delete') } />} >
-                {completedTask.time}
-            </Card>
-        )
-    })
+    const tState = useRecoilValue(tasksState)
+    const cState = useRecoilValue(completedTasksState)
+    const [term, setTerm] = useState('')
 
     const onTabPress = (key: string) => {
-        setKey(key);
-        setActiveSearch(false);
+        // do something when tab is pressed
     }
 
-    const onSearchToDo = (term: string) => {
-        if (key === '1') {
-            setSearchTasks( tasks.filter(task => task.content.includes(term)).map(filteredTask => {
-                return (
-                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
-                        {filteredTask.time}
-                    </Card>
-                )
-            }) )
-        }
-        else if (key === '2') {
-            setSearchCompletedTasks( completedTasks.filter(task => task.content.includes(term)).map(filteredTask => {
-                return (
-                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
-                        {filteredTask.time}
-                    </Card>
-                )
-            }) )
-        }
-
-        setActiveSearch(true)
+    const onClearSearch = (term: string) => {
+        setTerm('')
     }
 
     return (
         <React.Fragment>
             <Search
+                className="flex"
                 placeholder="input search text"
-                onSearch={value => onSearchToDo(value)}
-                enterButton
+                value={term}
+                onChange={e => setTerm(e.target.value)}
+                enterButton="Clear"
+                size="large"
+                onSearch={term => onClearSearch(term)}
             />
             <Tabs defaultActiveKey="1" onChange={onTabPress}>
                 <TabPane tab="To-do-list" key="1">
-                    { activeSearch ? searchTasks : taskList }
+                    { tState.length > 0 ?
+                        (
+                            term.length === 0 ?
+                            tState.map(task => {
+                                return (
+                                    <Card key={task.id} title={task.content} extra={ <MdClose onClick={() => onDeleteTask(task, 'finished') } />} >
+                                        {task.time}
+                                    </Card>
+                                )
+                            })
+                            :
+                            tState.filter(task => task.content.includes(term)).map(filteredTask => {
+                                return (
+                                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'finished') } />} >
+                                        {filteredTask.time}
+                                    </Card>
+                                )
+                            })
+
+                        )
+                        : <Empty /> }
                 </TabPane>
                 <TabPane tab="Completed Tasks" key="2">
-                    { completedTasks.length > 0 ? (activeSearch ? searchCompletedTasks : finishedTasks) : <Empty /> }
+                    { cState.length > 0 ?
+                        (
+                            term.length === 0 ?
+                            cState.map(task => {
+                                return (
+                                    <Card key={task.id} title={task.content} extra={ <MdClose onClick={() => onDeleteTask(task, 'delete') } />} >
+                                        {task.time}
+                                    </Card>
+                                )
+                            })
+                            :
+                            cState.filter(task => task.content.includes(term)).map(filteredTask => {
+                                return (
+                                    <Card key={filteredTask.id} title={filteredTask.content} extra={ <MdClose onClick={() => onDeleteTask(filteredTask, 'delete') } />} >
+                                        {filteredTask.time}
+                                    </Card>
+                                )
+                            })
+                        )
+                        : <Empty /> }
                 </TabPane>
             </Tabs>
         </React.Fragment>
