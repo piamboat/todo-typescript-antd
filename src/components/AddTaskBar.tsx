@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
 import DisplayTask from '@/components/DisplayTask'
 import { tasksState, completedTasksState, numOfTasks } from '@/components/AtomsState'
+import { Task } from '@/components/Type'
 
 import { Form, Input, Button, Alert } from 'antd'
 import { useRecoilState, useRecoilValue } from 'recoil'
-
-interface Task {
-    id: number;
-    content: string;
-    time: string;
-}
 
 const AddTaskBar: React.FC = () => {
     const [form] = Form.useForm()

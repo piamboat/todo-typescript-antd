@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
+import { CurrEdit } from '@/components/Type'
 import { Button } from 'antd';
-
-interface Task {
-    id: number;
-    content: string;
-    time: string;
-}
-
-interface CurrEdit {
-    currTask: Task;
-    type: string;
-}
 
 interface EditCardContentProps {
     currEdit: CurrEdit;

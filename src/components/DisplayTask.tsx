@@ -1,17 +1,12 @@
 import React, { useState } from 'react'
 import { tasksState, completedTasksState } from '@/components/AtomsState'
+import { Task } from '@/components/Type'
 import Modal from '@/components/Modal'
 import { useRecoilValue } from 'recoil'
 
 import { MdClose, MdEdit } from "react-icons/md"
 import { Tabs, Card, Empty, Input } from 'antd'
 import EditCardContent from '@/components/EditCardContent'
-
-interface Task {
-    id: number;
-    content: string;
-    time: string;
-}
 
 interface DisplayTaskProps {
     onDeleteTask: (deletedTask: Task, type: string) => void;

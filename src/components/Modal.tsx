@@ -22,5 +22,4 @@ const Modal: React.FC<ModalProps> = ({ children, onCancel = () => {} }) => {
   );
 };
 
-
 export default Modal;

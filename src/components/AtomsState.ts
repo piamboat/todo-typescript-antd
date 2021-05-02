@@ -1,10 +1,5 @@
 import { atom, selector } from 'recoil'
-
-interface Task {
-    id: number;
-    content: string;
-    time: string;
-}
+import { Task } from '@/components/Type'
 
 export const tasksState = atom({
     key: 'tasksState',
