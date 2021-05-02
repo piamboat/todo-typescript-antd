@@ -59,7 +59,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }
                 <React.Fragment>
                     <Search
                         className="flex"
-                        placeholder="input search text"
+                        placeholder="Searching task..."
                         value={term}
                         onChange={e => setTerm(e.target.value)}
                         enterButton="Clear"
