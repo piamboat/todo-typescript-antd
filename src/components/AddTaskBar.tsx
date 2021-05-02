@@ -91,7 +91,7 @@ const AddTaskBar: React.FC = () => {
                     Add Task
                 </Button>
             </ Form>
-            <Alert message={`Total Taks: ${totalTasks}`} type="info" />
+            <Alert message={`Total Uncompleted Taks: ${totalTasks}`} type="info" />
             <DisplayTask onDeleteTask={onDeleteTask} onEditContent={onEditContent} />
         </React.Fragment>
     )

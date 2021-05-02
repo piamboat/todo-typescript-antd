@@ -26,7 +26,12 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }
     const [term, setTerm] = useState('')
     const [modalActive, setModalActive] = useState(false);
     const [modalContent, setModalContent] = useState<JSX.Element>();
+    const [tab, setTab] = useState('1')
     
+    const onTabPress = (key: string) => {
+        setTab(key)
+    }
+
     const onEditSubmit = (currTask: Task, type: string) => {
         const currEdit = {
             currTask,
@@ -61,7 +66,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ onDeleteTask, onEditContent }
                         size="large"
                         onSearch={term => onClearSearch(term)}
                     />
-                    <Tabs defaultActiveKey="1">
+                    <Tabs defaultActiveKey={tab} onChange={onTabPress}>
                         <TabPane tab="To-do-list" key="1">
                             { tState.length > 0 ?
                                 (
