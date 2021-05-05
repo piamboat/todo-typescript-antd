@@ -3,7 +3,7 @@ import DisplayTask from '@/components/DisplayTask'
 import { tasksState, completedTasksState, numOfTasks } from '@/components/AtomsState'
 import { Task } from '@/components/Type'
 
-import { Form, Input, Button, Alert } from 'antd'
+import { Form, Input, Button, Alert, message } from 'antd'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
 const AddTaskBar: React.FC = () => {
@@ -14,17 +14,23 @@ const AddTaskBar: React.FC = () => {
     const totalTasks = useRecoilValue(numOfTasks)
 
     const onSubmitForm = () => {
-        const dateObj = new Date()
-        const time = `Added on ${dateObj.getHours()}:${dateObj.getMinutes()}`
-
-        const newTask = {
-            id: Math.floor(Math.random() * 10000) + 1,
-            content: task,
-            time
+        if (task.length > 0) {
+            const dateObj = new Date()
+            const time = `Added on ${dateObj.getHours()}:${dateObj.getMinutes()}`
+    
+            const newTask = {
+                id: Math.floor(Math.random() * 10000) + 1,
+                content: task,
+                time
+            }
+    
+            setTasks([newTask, ...tasks])
+            form.resetFields()
         }
-
-        setTasks([newTask, ...tasks])
-        form.resetFields()
+        else
+        {
+            message.error('Please add a task')
+        }
     };
 
     const onEditContent = (editId: number, content: string, type:string) => {
