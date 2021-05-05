@@ -26,6 +26,8 @@ const AddTaskBar: React.FC = () => {
     
             setTasks([newTask, ...tasks])
             form.resetFields()
+            // clear task
+            setTask('')
         }
         else
         {
